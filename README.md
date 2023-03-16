@@ -1,5 +1,4 @@
-# games
-Games using Pygame
+# Games using Pygame
 
 This is going to be a collection of several small games using pygame.
 
