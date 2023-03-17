@@ -242,7 +242,7 @@ def main():
                     webbrowser.open(r"https://www.linkedin.com/in/shashank-yadav-te674/")
                     
                 if code.collidepoint(pos):
-                    webbrowser.open(r"https://github.com/yshashanky/games")
+                    webbrowser.open(r"https://github.com/yshashanky/games/tree/main/ticTacToe")
 
         pygame.display.update()
         
