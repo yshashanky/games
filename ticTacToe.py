@@ -1,4 +1,5 @@
 import pygame
+import webbrowser
 
 pygame.init()
 pygame.font.init()
@@ -24,24 +25,23 @@ winnerArray = [((100, 100),(200, 200),(300, 300)),
 ((100, 300),(200, 300),(300, 300))]
 
 def startingText():
-        text = str("Let's play tic-tac-toe...")
-        text = my_font.render(text, True, (200, 000, 000))
-        text_rect = text.get_rect(center=(500/2, 500/2))
-        screen.blit(text, text_rect)
-        pygame.display.update()
-        pygame.time.delay(1000)
-        pygame.draw.rect(screen, (255, 255, 255),(80,98,410,312))
-        pygame.display.update()
-
-def restartText():
-    pygame.draw.rect(screen, (255, 255, 255),(99,99,401,302))
-    text = str("Another game...?")
+    text = str("Let's play tic-tac-toe...")
     text = my_font.render(text, True, (200, 000, 000))
     text_rect = text.get_rect(center=(500/2, 500/2))
     screen.blit(text, text_rect)
     pygame.display.update()
-    pygame.time.delay(2000)
-    pygame.draw.rect(screen, (255, 255, 255),(100,100,400,400))
+    pygame.time.delay(1000)
+    pygame.draw.rect(screen, (255, 255, 255),(80,98,410,312))
+    pygame.display.update()
+
+def restartText():
+    text = str("Next round is on...")
+    text = my_font.render(text, True, (200, 000, 000))
+    text_rect = text.get_rect(center=(500/2, 500/2))
+    screen.blit(text, text_rect)
+    pygame.display.update()
+    pygame.time.delay(1000)
+    pygame.draw.rect(screen, (255, 255, 255),(80,98,410,312))
     pygame.display.update()
 
 def background():
@@ -83,6 +83,7 @@ def updateScoreCard(player1, player2, draw):
     screen.blit(text, text_rect)
 
 def initialTurn():
+    pygame.draw.rect(screen, (255, 255, 255),(0,50,500,48))
     text = str("It is Player 1 turn...")
     text = my_font.render(text, True, (200, 000, 000))
     text_rect = text.get_rect(center=(500/2, 70))
@@ -147,21 +148,39 @@ def play(w, h):
             checkWinner(markedPlayer2, 2)
 
 def resetGame():
-    global markedBox, markedPlayer1, markedPlayer2, playerFalg
+    global markedBox, markedPlayer1, markedPlayer2, playerFalg, noResult
     pygame.draw.rect(screen, (255, 255, 255),(98,98,410,312))
     markedBox, markedPlayer1, markedPlayer2 = [], [], []
     playerFalg = False
-    startingText() 
+    noResult = True
+    restartText() 
+    initialTurn()
     background()
 
+def footer():
+    global linkden, code
+    footerFont = pygame.font.SysFont('Comic Sans MS', 15)
+    text = str("To restart the game or for the next round, press enter.")
+    text = footerFont.render(text, True, (0, 0, 0))
+    text_rect = text.get_rect(center=(500/2, 420))
+    screen.blit(text, text_rect)
+    text = str("Developed by Shashank Yadav!")
+    text = footerFont.render(text, True, (0, 0, 0))
+    text_rect = text.get_rect(center=(500/2, 450))
+    linkden = screen.blit(text, text_rect)
+    text = str("Source Code: @tic-tac-toe")
+    text = footerFont.render(text, True, (0, 0, 0))
+    text_rect = text.get_rect(center=(500/2, 470))
+    code = screen.blit(text, text_rect)
+
 def main():
-    global player1, player2, draw
     running = True
 
     startingText()    
     background()
     scorecard()
     initialTurn()
+    footer()
 
     while running:
 
@@ -171,18 +190,22 @@ def main():
         
             if event.type == pygame.MOUSEBUTTONUP:
                 w, h = pygame.mouse.get_pos()
-                print(w, h)
                 if w in range(100, 400) and h in range(100, 400):
                     play(w, h)
             
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN: 
                     resetGame()
-        
-        # playerTurn("P")
-        # 
-        
-        # pygame.display.flip()
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = event.pos
+
+                if linkden.collidepoint(pos):
+                    webbrowser.open(r"https://stackoverflow.com/")
+                
+                if code.collidepoint(pos):
+                    webbrowser.open(r"https://stackoverflow.com/")
+
         pygame.display.update()
         
 main()
