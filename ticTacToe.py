@@ -6,14 +6,16 @@ pygame.font.init()
 screen = pygame.display.set_mode((500, 500))
 screen.fill((255, 255, 255))
 clock = pygame.time.Clock()
-my_font = pygame.font.SysFont('Comic Sans MS', 30)
+my_font = pygame.font.SysFont('Comic Sans MS', 20)
+scorecardFont = pygame.font.SysFont('Comic Sans MS', 25)
+welcomeFont = pygame.font.SysFont('Comic Sans MS', 35)
 pygame.display.set_caption("Welcome to Tic-Tac-Toe")
 
-global playerFalg, noResult
+global playerFalg, noResult, winner, drawGame
 global markedBox, markedPlayer1, markedPlayer2
 global player1, player2, draw
 player1, player2, draw = 0, 0, 0
-noResult,  playerFalg = True, False
+noResult,  playerFalg, winner, drawGame = True, False, False, False
 markedBox, markedPlayer1, markedPlayer2 = [], [], []
 winnerArray = [((100, 100),(200, 200),(300, 300)),
 ((100, 100),(200, 100),(300, 100)),
@@ -26,17 +28,17 @@ winnerArray = [((100, 100),(200, 200),(300, 300)),
 
 def startingText():
     text = str("Let's play tic-tac-toe...")
-    text = my_font.render(text, True, (200, 000, 000))
+    text = welcomeFont.render(text, True, (200, 000, 000))
     text_rect = text.get_rect(center=(500/2, 500/2))
     screen.blit(text, text_rect)
     pygame.display.update()
     pygame.time.delay(1000)
-    pygame.draw.rect(screen, (255, 255, 255),(80,98,410,312))
+    pygame.draw.rect(screen, (255, 255, 255),(60,98,410,312))
     pygame.display.update()
 
 def restartText():
     text = str("Next round is on...")
-    text = my_font.render(text, True, (200, 000, 000))
+    text = welcomeFont.render(text, True, (200, 000, 000))
     text_rect = text.get_rect(center=(500/2, 500/2))
     screen.blit(text, text_rect)
     pygame.display.update()
@@ -56,7 +58,7 @@ def background():
 
 def scorecard():
     text = str("Player 1: 0 | Draw: 0 | Player 2: 0")
-    text = my_font.render(text, True, (200, 000, 000))
+    text = scorecardFont.render(text, True, (180, 40, 150))
     text_rect = text.get_rect(center=(500/2, 20))
     screen.blit(text, text_rect)
 
@@ -78,20 +80,20 @@ def drawCross(w, h):
 def updateScoreCard(player1, player2, draw):
     pygame.draw.rect(screen, (255, 255, 255),(0,0,500,50))
     text = str(f"Player 1: {player1} | Draw: {draw} | Player 2: {player2}")
-    text = my_font.render(text, True, (200, 000, 000))
+    text = scorecardFont.render(text, True, (180, 40, 150))
     text_rect = text.get_rect(center=(500/2, 20))
     screen.blit(text, text_rect)
 
 def initialTurn():
     pygame.draw.rect(screen, (255, 255, 255),(0,50,500,48))
-    text = str("It is Player 1 turn...")
+    text = str("It is Player 1's turn...")
     text = my_font.render(text, True, (200, 000, 000))
     text_rect = text.get_rect(center=(500/2, 70))
     screen.blit(text, text_rect)
 
 def playerTurn(player):
     pygame.draw.rect(screen, (255, 255, 255),(0,50,500,48))
-    text = str(f"It is {player} turn...")
+    text = str(f"It is {player}'s turn...")
     text = my_font.render(text, True, (200, 000, 000))
     text_rect = text.get_rect(center=(500/2, 70))
     screen.blit(text, text_rect)
@@ -104,7 +106,7 @@ def result(text):
     screen.blit(text, text_rect)
 
 def checkWinner(markedPlayer, playerNumber):
-    global noResult, player1, player2, draw
+    global noResult, player1, player2, draw, winner, drawGame
 
     for i in range (8):
         count = 0
@@ -113,17 +115,23 @@ def checkWinner(markedPlayer, playerNumber):
                 count += 1
         if count == 3:
             result("Here, we have a winner...!")
-            if playerNumber == 1: player1 += 1
-            else: player2 += 1
+            if playerNumber == 1: 
+                player1 += 1
+                winner = True
+            else: 
+                player2 += 1
+                winner = False
+
             updateScoreCard(player1, player2, draw)
             noResult = False
             break
-        elif ((len(markedPlayer1)+len(markedPlayer2)) == 9):
+
+    if ((len(markedPlayer1)+len(markedPlayer2)) == 9 and noResult != False):
             result("It's a draw, c'mon guys...!")
             draw += 1
             updateScoreCard(player1, player2, draw)
+            drawGame = True
             noResult = False
-            break
 
 def play(w, h):
     global playerFalg, noResult
@@ -149,28 +157,42 @@ def play(w, h):
 
 def resetGame():
     global markedBox, markedPlayer1, markedPlayer2, playerFalg, noResult
-    pygame.draw.rect(screen, (255, 255, 255),(98,98,410,312))
+    pygame.draw.rect(screen, (255, 255, 255),(98,98,410,305))
     markedBox, markedPlayer1, markedPlayer2 = [], [], []
-    playerFalg = False
+
+    print(playerFalg, drawGame)
+    if (drawGame == False):
+        if (winner == True):
+            # player 1 won
+            playerFalg = False
+            playerTurn("Player 1")
+        else:
+            # player 2 won
+            playerFalg = True
+            playerTurn("Player 2")
+    
     noResult = True
-    restartText() 
-    initialTurn()
+    restartText()
     background()
 
 def footer():
     global linkden, code
     footerFont = pygame.font.SysFont('Comic Sans MS', 15)
-    text = str("To restart the game or for the next round, press enter.")
+    text = str("To restart the game or for the next round, press enter...")
     text = footerFont.render(text, True, (0, 0, 0))
     text_rect = text.get_rect(center=(500/2, 420))
     screen.blit(text, text_rect)
-    text = str("Developed by Shashank Yadav!")
+    text = str("Winner plays first; chances will be swapped if it is a draw...")
     text = footerFont.render(text, True, (0, 0, 0))
-    text_rect = text.get_rect(center=(500/2, 450))
+    text_rect = text.get_rect(center=(500/2, 440))
+    screen.blit(text, text_rect)
+    text = str("Developed by: @Shashank Yadav!")
+    text = footerFont.render(text, True, (70, 29, 219))
+    text_rect = text.get_rect(center=(500/2, 465))
     linkden = screen.blit(text, text_rect)
     text = str("Source Code: @tic-tac-toe")
-    text = footerFont.render(text, True, (0, 0, 0))
-    text_rect = text.get_rect(center=(500/2, 470))
+    text = footerFont.render(text, True, (70, 29, 219))
+    text_rect = text.get_rect(center=(500/2, 485))
     code = screen.blit(text, text_rect)
 
 def main():
@@ -199,12 +221,10 @@ def main():
             
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = event.pos
-
                 if linkden.collidepoint(pos):
-                    webbrowser.open(r"https://stackoverflow.com/")
-                
+                    webbrowser.open(r"https://www.linkedin.com/in/shashank-yadav-te674/")
                 if code.collidepoint(pos):
-                    webbrowser.open(r"https://stackoverflow.com/")
+                    webbrowser.open(r"https://github.com/yshashanky/games")
 
         pygame.display.update()
         
