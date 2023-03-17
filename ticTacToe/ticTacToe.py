@@ -13,6 +13,8 @@ scorecardFont = pygame.font.SysFont('Comic Sans MS', 25)
 welcomeFont = pygame.font.SysFont('Comic Sans MS', 35)
 
 pygame.display.set_caption("Welcome to Tic-Tac-Toe")
+programIcon = pygame.image.load('C:/gitHubProjects/games/ticTacToe/data/icon.png')
+pygame.display.set_icon(programIcon)
 
 global playerFalg, noResult, winner, drawGame
 global markedBox, markedPlayer1, markedPlayer2
