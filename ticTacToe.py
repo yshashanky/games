@@ -30,12 +30,11 @@ def startingText():
         screen.blit(text, text_rect)
         pygame.display.update()
         pygame.time.delay(1000)
-        pygame.draw.rect(screen, (255, 255, 255),(0,0,500,500))
+        pygame.draw.rect(screen, (255, 255, 255),(80,98,410,312))
         pygame.display.update()
 
 def restartText():
-    pygame.time.delay(2000)
-    pygame.draw.rect(screen, (255, 255, 255),(99,99,400,400))
+    pygame.draw.rect(screen, (255, 255, 255),(99,99,401,302))
     text = str("Another game...?")
     text = my_font.render(text, True, (200, 000, 000))
     text_rect = text.get_rect(center=(500/2, 500/2))
@@ -147,6 +146,14 @@ def play(w, h):
             playerTurn("Player 1")
             checkWinner(markedPlayer2, 2)
 
+def resetGame():
+    global markedBox, markedPlayer1, markedPlayer2, playerFalg
+    pygame.draw.rect(screen, (255, 255, 255),(98,98,410,312))
+    markedBox, markedPlayer1, markedPlayer2 = [], [], []
+    playerFalg = False
+    startingText() 
+    background()
+
 def main():
     global player1, player2, draw
     running = True
@@ -167,6 +174,10 @@ def main():
                 print(w, h)
                 if w in range(100, 400) and h in range(100, 400):
                     play(w, h)
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN: 
+                    resetGame()
         
         # playerTurn("P")
         # 
