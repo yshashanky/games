@@ -3,17 +3,21 @@ import webbrowser
 
 pygame.init()
 pygame.font.init()
+
 screen = pygame.display.set_mode((500, 500))
 screen.fill((255, 255, 255))
 clock = pygame.time.Clock()
+
 my_font = pygame.font.SysFont('Comic Sans MS', 20)
 scorecardFont = pygame.font.SysFont('Comic Sans MS', 25)
 welcomeFont = pygame.font.SysFont('Comic Sans MS', 35)
+
 pygame.display.set_caption("Welcome to Tic-Tac-Toe")
 
 global playerFalg, noResult, winner, drawGame
 global markedBox, markedPlayer1, markedPlayer2
 global player1, player2, draw
+
 player1, player2, draw = 0, 0, 0
 noResult,  playerFalg, winner, drawGame = True, False, False, False
 markedBox, markedPlayer1, markedPlayer2 = [], [], []
@@ -62,20 +66,26 @@ def scorecard():
     text_rect = text.get_rect(center=(500/2, 20))
     screen.blit(text, text_rect)
 
+def drawWiningLine(w, h):
+    w1, w2 = w[0]+50 , w[1]+50
+    h1, h2 = h[0]+50 , h[1]+50
+    pygame.draw.lines(screen, (0, 255, 160), False, 
+                      [(w1, w2), (h1, h2)], 8)
+
 def drawCircle(w, h):
     w += 50
     h += 50
-    pygame.draw.circle(screen, (0, 0, 255), (w, h), 30, 5)
+    pygame.draw.circle(screen, (180, 90, 180), (w, h), 30, 8)
 
 def drawCross(w, h):
     w1, w2 = w + 25, w + 75
     h1, h2 = h + 25, h + 75
 
-    pygame.draw.lines(screen, (0, 255, 0), False, 
-                      [(w1, h1), (w2, h2)], 5)
+    pygame.draw.lines(screen, (90, 90, 180), False, 
+                      [(w1, h1), (w2, h2)], 10)
     
-    pygame.draw.lines(screen, (0, 255, 0), False, 
-                      [(w1, h2), (w2, h1)], 5)
+    pygame.draw.lines(screen, (90, 90, 180), False, 
+                      [(w1, h2), (w2, h1)], 10)
 
 def updateScoreCard(player1, player2, draw):
     pygame.draw.rect(screen, (255, 255, 255),(0,0,500,50))
@@ -110,11 +120,14 @@ def checkWinner(markedPlayer, playerNumber):
 
     for i in range (8):
         count = 0
+
         for j in range (3):
             if winnerArray[i][j] in markedPlayer:
                 count += 1
+
         if count == 3:
             result("Here, we have a winner...!")
+            drawWiningLine(winnerArray[i][0], winnerArray[i][2])
             if playerNumber == 1: 
                 player1 += 1
                 winner = True
@@ -124,7 +137,6 @@ def checkWinner(markedPlayer, playerNumber):
 
             updateScoreCard(player1, player2, draw)
             noResult = False
-            break
 
     if ((len(markedPlayer1)+len(markedPlayer2)) == 9 and noResult != False):
             result("It's a draw, c'mon guys...!")
@@ -134,14 +146,14 @@ def checkWinner(markedPlayer, playerNumber):
             noResult = False
 
 def play(w, h):
-    global playerFalg, noResult
-    global markedBox, markedPlayer1, markedPlayer2
+    global playerFalg, noResult, markedBox, markedPlayer1, markedPlayer2
 
     w = ((w // 100) * 100)
     h = ((h // 100) * 100)
 
     if (w, h) not in markedBox and noResult == True:
         markedBox.append((w,h))
+
         if playerFalg == False:
             drawCircle(w, h)
             markedPlayer1.append((w,h))
@@ -157,10 +169,10 @@ def play(w, h):
 
 def resetGame():
     global markedBox, markedPlayer1, markedPlayer2, playerFalg, noResult
-    pygame.draw.rect(screen, (255, 255, 255),(98,98,410,305))
     markedBox, markedPlayer1, markedPlayer2 = [], [], []
 
-    print(playerFalg, drawGame)
+    pygame.draw.rect(screen, (255, 255, 255),(98,98,410,305))
+
     if (drawGame == False):
         if (winner == True):
             # player 1 won
@@ -177,19 +189,23 @@ def resetGame():
 
 def footer():
     global linkden, code
+
     footerFont = pygame.font.SysFont('Comic Sans MS', 15)
     text = str("To restart the game or for the next round, press enter...")
     text = footerFont.render(text, True, (0, 0, 0))
     text_rect = text.get_rect(center=(500/2, 420))
     screen.blit(text, text_rect)
+
     text = str("Winner plays first; chances will be swapped if it is a draw...")
     text = footerFont.render(text, True, (0, 0, 0))
     text_rect = text.get_rect(center=(500/2, 440))
     screen.blit(text, text_rect)
-    text = str("Developed by: @Shashank Yadav!")
+
+    text = str("Developed by: @Shashank Yadav")
     text = footerFont.render(text, True, (70, 29, 219))
     text_rect = text.get_rect(center=(500/2, 465))
     linkden = screen.blit(text, text_rect)
+
     text = str("Source Code: @tic-tac-toe")
     text = footerFont.render(text, True, (70, 29, 219))
     text_rect = text.get_rect(center=(500/2, 485))
@@ -197,7 +213,6 @@ def footer():
 
 def main():
     running = True
-
     startingText()    
     background()
     scorecard()
