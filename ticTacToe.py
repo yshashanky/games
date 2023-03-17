@@ -238,6 +238,7 @@ def main():
                 pos = event.pos
                 if linkden.collidepoint(pos):
                     webbrowser.open(r"https://www.linkedin.com/in/shashank-yadav-te674/")
+                    
                 if code.collidepoint(pos):
                     webbrowser.open(r"https://github.com/yshashanky/games")
 
