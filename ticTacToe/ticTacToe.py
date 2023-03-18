@@ -187,6 +187,10 @@ def resetGame():
     
     if drawGame == True:
         drawGame = False
+        if (playerFalg == False):
+            playerTurn("Player 1")
+        else:
+            playerTurn("Player 2")
 
     noResult = True
     restartText()
