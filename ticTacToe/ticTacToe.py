@@ -170,7 +170,7 @@ def play(w, h):
             checkWinner(markedPlayer2, 2)
 
 def resetGame():
-    global markedBox, markedPlayer1, markedPlayer2, playerFalg, noResult
+    global markedBox, markedPlayer1, markedPlayer2, playerFalg, noResult, drawGame
     markedBox, markedPlayer1, markedPlayer2 = [], [], []
 
     pygame.draw.rect(screen, (255, 255, 255),(98,98,410,305))
